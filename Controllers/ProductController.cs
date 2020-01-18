@@ -12,10 +12,8 @@ using App.Routes;
 
 namespace App.Controllers
 {
-   // [Route("api/[controller]")]
     [ApiController]
     [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
-    //[Authorize] This is not working
     public class ProductController : ControllerBase
     {
         private readonly IProductService _ProductService;
@@ -28,7 +26,7 @@ namespace App.Controllers
           
         }
         [HttpPost, Route(ApiRoutes.Business.addProduct)]
-        public async Task<IActionResult> AddProduct(Product Product)
+        public async Task<IActionResult> AddProduct([FromBody] Product Product)
         {
             try
             {                
@@ -51,7 +49,7 @@ namespace App.Controllers
             return Ok(operationResult);
         }
         [HttpPut, Route(ApiRoutes.Business.updateProduct)]
-        public async Task<IActionResult> UpdateProduct(Product Product)
+        public async Task<IActionResult> UpdateProduct([FromBody] Product Product)
         {
             try
             {

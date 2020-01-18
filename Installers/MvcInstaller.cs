@@ -6,6 +6,7 @@ using Microsoft.OpenApi.Models;
 using App.Services;
 using Newtonsoft.Json.Serialization;
 using Newtonsoft.Json;
+using System.Text.Json;
 
 namespace App.Installers
 {
@@ -14,9 +15,13 @@ namespace App.Installers
         public void InstallServices(IServiceCollection services, IConfiguration configuration)
         {
             services.AddScoped<IIdentityService, IdentityService>();
-            //services.AddMvc();
             services.AddMvc(option => option.EnableEndpointRouting = false)
-                    .AddNewtonsoftJson(opt => opt.SerializerSettings.ReferenceLoopHandling = ReferenceLoopHandling.Ignore);
+                    .SetCompatibilityVersion(CompatibilityVersion.Version_3_0)
+                    .AddJsonOptions(options =>
+                    {
+                        options.JsonSerializerOptions.PropertyNameCaseInsensitive = true;
+                        options.JsonSerializerOptions.PropertyNamingPolicy = null;
+                    });
             services.AddAuthorization();
             services.AddSwaggerGen(x =>
             {

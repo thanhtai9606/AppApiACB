@@ -15,7 +15,7 @@ namespace App.Controllers
 {
 
     [ApiController]
-    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+   // [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
     public class SaleController : ControllerBase
     {
         private readonly ISaleHeaderService _SaleHeaderService;
@@ -38,7 +38,7 @@ namespace App.Controllers
 
         }
         [HttpPost, Route(ApiRoutes.Business.addSale)]
-        public async Task<IActionResult> AddSale(SaleHeader Sale)
+        public async Task<IActionResult> AddSale([FromBody] SaleHeader Sale)
         {
             try
             {
@@ -71,7 +71,7 @@ namespace App.Controllers
             return Ok(operationResult);
         }
         [HttpPut, Route(ApiRoutes.Business.updateSale)]
-        public async Task<IActionResult> UpdateSale(SaleHeader Sale)
+        public async Task<IActionResult> UpdateSale([FromBody] SaleHeader Sale)
         {
             try
             {
@@ -165,34 +165,34 @@ namespace App.Controllers
         }
 
 
-        [HttpGet, Route("GetProducts")]
-        public IActionResult GetProducts()
-        {
-            var product = _ProductService.Queryable().ToList();
-            var result = from p in product
-                         select new
-                         {
-                             id = p.ProductId,
-                             text = p.ProductName
-                         };
+        // [HttpGet, Route(ApiRoutes.Business.getProduct)]
+        // public IActionResult GetProducts()
+        // {
+        //     var product = _ProductService.Queryable().ToList();
+        //     var result = from p in product
+        //                  select new
+        //                  {
+        //                      id = p.ProductId,
+        //                      text = p.ProductName
+        //                  };
 
 
-            return Ok(product);
-        }
-        [HttpGet, Route("GetCustomers")]
-        public IActionResult GetCustomers()
-        {
-            var customer = _CustomerService.Queryable().ToList();
-            var result = from c in customer
-                         select new
-                         {
-                             id = c.CustomerId,
-                             text = c.CustomerName
-                         };
+        //     return Ok(product);
+        // }
+        // [HttpGet, Route(ApiRoutes.Business.getCustomer)]
+        // public IActionResult GetCustomers()
+        // {
+        //     var customer = _CustomerService.Queryable().ToList();
+        //     var result = from c in customer
+        //                  select new
+        //                  {
+        //                      id = c.CustomerId,
+        //                      text = c.CustomerName
+        //                  };
 
 
-            return Ok(customer);
-        }
+        //     return Ok(customer);
+        // }
 
     }
 }
