@@ -6,14 +6,14 @@ using BecamexIDC.Pattern.EF.UnitOfWork;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using App.Services;
+using App.Routes;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 
 namespace App.Controllers
 {
-   // [Produces("application/json")]
-    [Route("api/[controller]")]
+
     [ApiController]
-    //[Authorize(AuthenticationSchemes = "Bearer")] // waring have to use this
-    //[Authorize] This is not working
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
     public class CustomerController : ControllerBase
     {
         private readonly ICustomerService _CustomerService;
@@ -23,9 +23,9 @@ namespace App.Controllers
         {
             _CustomerService = CustomerService;
             _unitOfWork = unitOfWork;
-          
+
         }
-        [HttpPost,Route("addCustomer")]
+        [HttpPost(ApiRoutes.Business.addCustomer)]
         public async Task<IActionResult> AddCustomer([FromBody] Customer entity)
         {
             try
@@ -48,13 +48,13 @@ namespace App.Controllers
             }
             return Ok(operationResult);
         }
-        [HttpPut, Route("UpdateCustomer")]
+        [HttpPut, Route(ApiRoutes.Business.updateCustomer)]
         public async Task<IActionResult> UpdateCustomer([FromBody] Customer entity)
         {
             try
             {
                 _CustomerService.Update(entity);
-                int res =  await _unitOfWork.SaveChangesAsync();
+                int res = await _unitOfWork.SaveChangesAsync();
                 if (res > 0)
                 {
                     operationResult.Success = true;
@@ -71,14 +71,14 @@ namespace App.Controllers
             }
             return Ok(operationResult);
         }
-        
-        [HttpDelete, Route("DeleteCustomer/{id}")]
+
+        [HttpDelete, Route(ApiRoutes.Business.deleteCustomer)]
         public async Task<IActionResult> DeleteCustomer(int id)
         {
             try
             {
                 _CustomerService.Delete(id);
-               int res =  await _unitOfWork.SaveChangesAsync();
+                int res = await _unitOfWork.SaveChangesAsync();
                 if (res > 0)
                 {
                     operationResult.Success = true;
@@ -95,16 +95,16 @@ namespace App.Controllers
             }
             return Ok(operationResult);
         }
-        [HttpGet, Route("GetCustomer")]
+        [HttpGet, Route(ApiRoutes.Business.getCustomer)]
         public IActionResult GetCustomer()
         {
             return Ok(_CustomerService.Queryable());
         }
 
-        [HttpGet, Route("GetCustomerById")]
+        [HttpGet, Route(ApiRoutes.Business.findCustomerById)]
         public IActionResult GetCustomerById(int id)
         {
-            return Ok(_CustomerService.FindBy(x=>x.CustomerId == id));
+            return Ok(_CustomerService.FindBy(x => x.CustomerId == id));
         }
 
 

@@ -7,12 +7,14 @@ using BecamexIDC.Pattern.EF.UnitOfWork;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using App.Services;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using App.Routes;
 
 namespace App.Controllers
 {
-    [Route("api/[controller]")]
+   // [Route("api/[controller]")]
     [ApiController]
-   // [Authorize(AuthenticationSchemes = "Bearer")] // waring have to use this
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
     //[Authorize] This is not working
     public class ProductController : ControllerBase
     {
@@ -25,7 +27,7 @@ namespace App.Controllers
             _unitOfWork = unitOfWork;
           
         }
-        [HttpPost, Route("AddProduct")]
+        [HttpPost, Route(ApiRoutes.Business.addProduct)]
         public async Task<IActionResult> AddProduct(Product Product)
         {
             try
@@ -48,7 +50,7 @@ namespace App.Controllers
             }
             return Ok(operationResult);
         }
-        [HttpPut, Route("UpdateProduct")]
+        [HttpPut, Route(ApiRoutes.Business.updateProduct)]
         public async Task<IActionResult> UpdateProduct(Product Product)
         {
             try
@@ -72,7 +74,7 @@ namespace App.Controllers
             return Ok(operationResult);
         }
         
-        [HttpDelete, Route("DeleteProduct/{id}")]
+        [HttpDelete, Route(ApiRoutes.Business.deleteProduct)]
         public async Task<IActionResult> DeleteProduct(int id)
         {
             try
@@ -95,7 +97,7 @@ namespace App.Controllers
             }
             return Ok(operationResult);
         }
-        [HttpGet, Route("GetProduct")]
+        [HttpGet, Route(ApiRoutes.Business.getProduct)]
         public IActionResult GetProduct()
         {
             return Ok(_ProductService.Queryable().ToList().Where(p=>p.Inventory >0));

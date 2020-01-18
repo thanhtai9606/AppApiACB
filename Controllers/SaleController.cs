@@ -8,13 +8,14 @@ using BecamexIDC.Pattern.EF.UnitOfWork;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using App.Services;
+using App.Routes;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 
 namespace App.Controllers
 {
-    [Route("api/[controller]")]
+
     [ApiController]
-   // [Authorize(AuthenticationSchemes = "Bearer")] // waring have to use this
-    //[Authorize] This is not working
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
     public class SaleController : ControllerBase
     {
         private readonly ISaleHeaderService _SaleHeaderService;
@@ -23,7 +24,7 @@ namespace App.Controllers
         private readonly IProductService _ProductService;
         private readonly IUnitOfWorkAsync _unitOfWork;
         private OperationResult operationResult = new OperationResult();
-        public SaleController(ISaleHeaderService SaleHeaderService, 
+        public SaleController(ISaleHeaderService SaleHeaderService,
                                 ICustomerService customerService,
                                 IProductService productService,
                                 ISaleDetailService saleDetailService,
@@ -34,17 +35,18 @@ namespace App.Controllers
             _unitOfWork = unitOfWork;
             _CustomerService = customerService;
             _ProductService = productService;
-          
+
         }
-        [HttpPost, Route("AddSale")]
+        [HttpPost, Route(ApiRoutes.Business.addSale)]
         public async Task<IActionResult> AddSale(SaleHeader Sale)
         {
             try
             {
-                var sale_detail =  Sale.SaleDetails.ToList();
-               // var totalLine = sale_detail.Sum(x=>x.TotalAmount);//from s in sale_detail.Select(x=>x.TotalAmount).Sum();
-               // Sale.TotalLine = totalLine == 0 ? 0: totalLine;
-                foreach(var sd in sale_detail){
+                var sale_detail = Sale.SaleDetails.ToList();
+                // var totalLine = sale_detail.Sum(x=>x.TotalAmount);//from s in sale_detail.Select(x=>x.TotalAmount).Sum();
+                // Sale.TotalLine = totalLine == 0 ? 0: totalLine;
+                foreach (var sd in sale_detail)
+                {
                     var p = _ProductService.Find(sd.ProductId);
                     p.Inventory -= sd.Quantity;
                     sd.WarrantyStart = DateTime.Now;
@@ -68,13 +70,13 @@ namespace App.Controllers
             }
             return Ok(operationResult);
         }
-        [HttpPut, Route("UpdateSale")]
+        [HttpPut, Route(ApiRoutes.Business.updateSale)]
         public async Task<IActionResult> UpdateSale(SaleHeader Sale)
         {
             try
             {
                 _SaleHeaderService.Update(Sale);
-                int res =  await _unitOfWork.SaveChangesAsync();
+                int res = await _unitOfWork.SaveChangesAsync();
                 if (res > 0)
                 {
                     operationResult.Success = true;
@@ -91,14 +93,14 @@ namespace App.Controllers
             }
             return Ok(operationResult);
         }
-        
-        [HttpDelete, Route("DeleteSale/{id}")]
+
+        [HttpDelete, Route(ApiRoutes.Business.deleteSale)]
         public async Task<IActionResult> DeleteSale(int id)
         {
             try
-            { 
+            {
                 _SaleHeaderService.Delete(id);
-               int res =  await _unitOfWork.SaveChangesAsync();
+                int res = await _unitOfWork.SaveChangesAsync();
                 if (res > 0)
                 {
                     operationResult.Success = true;
@@ -115,7 +117,7 @@ namespace App.Controllers
             }
             return Ok(operationResult);
         }
-        [HttpGet, Route("GetSale")]
+        [HttpGet, Route(ApiRoutes.Business.getSale)]
         public IActionResult GetSale()
         {
             var sale_header = _SaleHeaderService.Queryable().ToList();
@@ -128,14 +130,14 @@ namespace App.Controllers
                          {
                              s.SoId,
                              c.CustomerName,
-                             c.Phone,       
-                             s.TotalLine,                     
+                             c.Phone,
+                             s.TotalLine,
                              s.ModifiedDate
                          };
             return Ok(result);
         }
 
-        [HttpGet, Route("GetSaleById")]
+        [HttpGet, Route(ApiRoutes.Business.findSaleById)]
         public IActionResult GetSaleById(int soId)
         {
             var sale_detail = _SaleDetailService.Queryable().ToList();
@@ -149,46 +151,46 @@ namespace App.Controllers
                              s.SoId,
                              p.ProductName,
                              s.TotalAmount,
-                             p.Warranty,    
+                             p.Warranty,
                              s.WarrantyStart,
-                             s.WarrantyEnd,   
+                             s.WarrantyEnd,
                          };
             return Ok(result);
         }
 
-        [HttpGet, Route("GetSaleHeaderById")]
+        [HttpGet, Route(ApiRoutes.Business.findSaleHeaderById)]
         public IActionResult GetSaleHeaderById(int soId)
-        {           
-            return Ok(_SaleHeaderService.FindBy(x=>x.SoId == soId));
+        {
+            return Ok(_SaleHeaderService.FindBy(x => x.SoId == soId));
         }
 
 
         [HttpGet, Route("GetProducts")]
         public IActionResult GetProducts()
-        {            
+        {
             var product = _ProductService.Queryable().ToList();
-            var result = from p in product                        
+            var result = from p in product
                          select new
                          {
                              id = p.ProductId,
-                             text = p.ProductName                            
+                             text = p.ProductName
                          };
 
-            
+
             return Ok(product);
         }
         [HttpGet, Route("GetCustomers")]
         public IActionResult GetCustomers()
-        {            
+        {
             var customer = _CustomerService.Queryable().ToList();
-            var result = from c in customer                        
+            var result = from c in customer
                          select new
                          {
                              id = c.CustomerId,
-                             text = c.CustomerName                            
+                             text = c.CustomerName
                          };
 
-            
+
             return Ok(customer);
         }
 
