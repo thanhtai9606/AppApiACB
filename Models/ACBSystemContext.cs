@@ -200,11 +200,7 @@ namespace App.Models
                     .HasColumnType("int(11)");
 
                 entity.Property(e => e.Discount).HasColumnName("discount");
-
-                entity.Property(e => e.IsAtive)
-                    .IsRequired()
-                    .HasColumnName("isAtive")
-                    .HasDefaultValueSql("'1'");
+              
 
                 entity.Property(e => e.ModifiedDate)
                     .HasColumnName("modified_date")

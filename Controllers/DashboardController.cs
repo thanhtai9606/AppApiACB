@@ -15,7 +15,7 @@ namespace App.Controllers
     [ApiController]
    // [Authorize(AuthenticationSchemes = "Bearer")] // waring have to use this
     //[Authorize] This is not working
-    public class DashboarController : ControllerBase
+    public class DashboardController : ControllerBase
     {
         private readonly ISaleHeaderService _SaleHeaderService;
         private readonly ISaleDetailService _SaleDetailService;
@@ -23,7 +23,7 @@ namespace App.Controllers
         private readonly IProductService _ProductService;
         private readonly IUnitOfWorkAsync _unitOfWork;
         private OperationResult operationResult = new OperationResult();
-        public DashboarController(ISaleHeaderService SaleHeaderService, 
+        public DashboardController(ISaleHeaderService SaleHeaderService, 
                                 ICustomerService customerService,
                                 IProductService productService,
                                 ISaleDetailService saleDetailService,

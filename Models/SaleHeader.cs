@@ -7,7 +7,7 @@ namespace App.Models
     {
         public SaleHeader()
         {
-            SaleDetails = new HashSet<SaleDetail>();
+           SaleDetails = new HashSet<SaleDetail>();
         }
 
         public int SoId { get; set; }
@@ -18,7 +18,6 @@ namespace App.Models
         public double Tax { get; set; }
         public string CreateBy { get; set; }
         public DateTime ModifiedDate { get; set; }
-        public bool? IsAtive { get; set; }
 
         public virtual Customer Customer { get; set; }
         public virtual ICollection<SaleDetail> SaleDetails { get; set; }

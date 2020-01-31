@@ -15,7 +15,7 @@ namespace App.Controllers
 {
 
     [ApiController]
-   // [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
     public class SaleController : ControllerBase
     {
         private readonly ISaleHeaderService _SaleHeaderService;
@@ -118,14 +118,18 @@ namespace App.Controllers
             return Ok(operationResult);
         }
         [HttpGet, Route(ApiRoutes.Business.getSale)]
-        public IActionResult GetSale()
+        public IActionResult GetSale(string key,int size)
         {
+            key = string.IsNullOrEmpty(key)? "" :key;
             var sale_header = _SaleHeaderService.Queryable().ToList();
             var customer = _CustomerService.Queryable().ToList();
             var product = _ProductService.Queryable().ToList();
 
             var result = from s in sale_header
-                         join c in customer on s.CustomerId equals c.CustomerId
+                         join c in customer on s.CustomerId equals c.CustomerId 
+                         where c.CustomerName.Contains(key) || 
+                         c.Phone.Contains(key)
+                         orderby c.CustomerName
                          select new
                          {
                              s.SoId,
@@ -134,7 +138,7 @@ namespace App.Controllers
                              s.TotalLine,
                              s.ModifiedDate
                          };
-            return Ok(result);
+            return Ok(result.Take(size));
         }
 
         [HttpGet, Route(ApiRoutes.Business.findSaleById)]

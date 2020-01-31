@@ -35,21 +35,21 @@ namespace App.Routes
             //Customer Routes
             public const string addCustomer = Base + "/customer/addCustomer";
             public const string updateCustomer = Base + "/customer/updateCustomer";
-            public const string deleteCustomer = Base + "/customer/deleteCustomer";
+            public const string deleteCustomer = Base + "/customer/deleteCustomer/{id}";
             public const string getCustomer = Base + "/customer/getCustomer";
             public const string findCustomerById = Base + "/customer/findCustomerById";
 
             //Product routes
             public const string addProduct = Base + "/product/addProduct";
             public const string updateProduct = Base + "/product/updateProduct";
-            public const string deleteProduct = Base + "/product/deleteProduct";
+            public const string deleteProduct = Base + "/product/deleteProduct/{id}";
             public const string getProduct = Base + "/product/getProduct";
             public const string findProductById = Base + "/product/findProductById";
 
             //Sale routes
             public const string addSale = Base + "/sale/addSale";
             public const string updateSale = Base + "/sale/updateSale";
-            public const string deleteSale = Base + "/sale/deleteSale";
+            public const string deleteSale = Base + "/sale/deleteSale/{id}";
             public const string getSale = Base + "/sale/getSale";
             public const string findSaleById = Base + "/sale/findSaleById";
             public const string findSaleHeaderById = Base + "/sale/findSaleHeaderById";
