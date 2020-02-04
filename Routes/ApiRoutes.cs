@@ -53,6 +53,12 @@ namespace App.Routes
             public const string getSale = Base + "/sale/getSale";
             public const string findSaleById = Base + "/sale/findSaleById";
             public const string findSaleHeaderById = Base + "/sale/findSaleHeaderById";
+
+            //dashboard
+            public const string Profit = Base + "/dashboard/GetProfit";
+            public const string Sale = Base + "/dashboard/GetSaleOrder";
+            public const string Inventory = Base + "/dashboard/GetInventory";
+            public const string Customer = Base + "/dashboard/GetCustomer";
         }
     }
 }

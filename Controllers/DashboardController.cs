@@ -8,10 +8,11 @@ using BecamexIDC.Pattern.EF.UnitOfWork;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using App.Services;
+using App.Routes;
 
 namespace App.Controllers
 {
-    [Route("api/[controller]")]
+   // [Route("api/[controller]")]
     [ApiController]
    // [Authorize(AuthenticationSchemes = "Bearer")] // waring have to use this
     //[Authorize] This is not working
@@ -36,14 +37,14 @@ namespace App.Controllers
             _ProductService = productService;
           
         }
-        [HttpGet, Route("GetSaleOrder")]
+        [HttpGet, Route(ApiRoutes.Business.Sale)]
         public IActionResult GetSaleOrder(string options)
         {
             var result = _SaleHeaderService.Queryable().ToList();
             int count = 0;
             switch(options){
                 case "day":
-                    count = result.Where(p=>p.ModifiedDate == DateTime.Today).Count();
+                    count = result.Where(p=>p.ModifiedDate.Date == DateTime.Today.Date).Count();
                     break;
                 case "month":
                     count = result.Where(p=>p.ModifiedDate.Month == DateTime.Today.Month).Count();
@@ -57,14 +58,14 @@ namespace App.Controllers
             }
             return Ok(count);
         }
-        [HttpGet, Route("GetProfit")]
+        [HttpGet, Route(ApiRoutes.Business.Profit)]
         public IActionResult GetProfit(string options)
         {
             var result = _SaleHeaderService.Queryable().ToList();
             int sum = 0;
             switch(options){
                 case "day":
-                    sum = result.Where(p=>p.ModifiedDate == DateTime.Today).Sum(p=>p.TotalLine);
+                    sum = result.Where(p=>p.ModifiedDate.Date == DateTime.Today.Date).Sum(p=>p.TotalLine);
                     break;
                 case "month":
                     sum = result.Where(p=>p.ModifiedDate.Month == DateTime.Today.Month).Sum(p=>p.TotalLine);
@@ -78,13 +79,13 @@ namespace App.Controllers
             }
             return Ok(sum);
         }
-        [HttpGet, Route("GetCustomer")]
+        [HttpGet, Route(ApiRoutes.Business.Customer)]
         public IActionResult GetCustomer()
         {
             return Ok(_CustomerService.Queryable().ToList().Count);
         }
 
-        [HttpGet, Route("GetInventory")]
+        [HttpGet, Route(ApiRoutes.Business.Inventory)]
         public IActionResult GetInventory()
         {
             return Ok(_ProductService.Queryable().ToList().Sum(p=>p.Inventory));
